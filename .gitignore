@@ -43,6 +43,10 @@ ExportedObj/
 *.opendb
 *.VC.db
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+.env
+>>>>>>> 8e1c490c4ba1f8673d9ad6c2b7ebcc5f4dc75711
 =======
 .env
 >>>>>>> 8e1c490c4ba1f8673d9ad6c2b7ebcc5f4dc75711
