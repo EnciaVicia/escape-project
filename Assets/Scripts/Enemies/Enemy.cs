@@ -42,7 +42,6 @@ public abstract class Enemy : MonoBehaviour
       if (hit.transform.tag == "Player") {
         DealDamage(damage, hit.transform);
       }
-    }
   }
-
+  }
 }
