@@ -5,6 +5,9 @@ using UnityEngine;
 public class PickUpFuel: MonoBehaviour
 {
     public GameObject FtointeractFuel;
+
+    public AudioSource playerSourceFuel;
+    public AudioClip itemFound;
     void Start()
     {
         
@@ -25,10 +28,12 @@ public class PickUpFuel: MonoBehaviour
 
             if (other.gameObject.name == "Player" && Input.GetKeyDown(KeyCode.F))
             {
+                FuelFound (itemFound);
                 FtointeractFuel.SetActive(false);
                 Destroy(this.gameObject);
                 Debug.Log(other.GetComponent<Player>().Fuel);
-                other.GetComponent<Player>().Fuel.Add(gameObject);    
+                other.GetComponent<Player>().Fuel.Add(gameObject);
+                other.GetComponent<Player>().fuelToDisplay ++;    
             }
     }
     
@@ -38,6 +43,12 @@ public class PickUpFuel: MonoBehaviour
         {
             FtointeractFuel.SetActive(false);
         }
+    }
+
+    void FuelFound (AudioClip FuelFoundIt)
+    {
+        playerSourceFuel.clip = FuelFoundIt;
+        playerSourceFuel.Play();
     }
 
 

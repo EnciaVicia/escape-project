@@ -23,8 +23,9 @@ public class EscapeArea : MonoBehaviour
         if (other.gameObject.name == "Player" && Input.GetKeyDown(KeyCode.F))
         {
             fToInteractToEscape.SetActive(false);
-            SceneManager.LoadScene(3);
+            Invoke("Load2Scene", 5);
             CarSoundPlay(carSound);
+            
         }
     }
 
@@ -43,7 +44,10 @@ public class EscapeArea : MonoBehaviour
 
     void CarSoundPlay(AudioClip Voice)
     {
-        carListener.clip = Voice;
-        carListener.Play();
+        if (!carListener.isPlaying)
+        {
+            carListener.clip = Voice;
+            carListener.Play();
+        }
     }
 }

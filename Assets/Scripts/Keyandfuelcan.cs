@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Keyandfuelcan : MonoBehaviour
 {
@@ -11,11 +12,16 @@ public class Keyandfuelcan : MonoBehaviour
 
     public GameObject fToInteract;
 
+    public GameObject intFuelActive;
+
+    public Text Objetivos;
+    public Text intFuel;
     float Timer = 5f;
     void Start()
     {
         textFoundKey.SetActive(false);
         fToInteract.SetActive(false);
+        intFuelActive.SetActive(false);
     }
 
    
@@ -31,11 +37,15 @@ public class Keyandfuelcan : MonoBehaviour
         fToInteract.SetActive(true);
         if (other.gameObject.name == "Player" && Input.GetKeyDown(KeyCode.F))
         {
+            intFuelActive.SetActive(true);
+            Objetivos.text = Objetivos.GetComponent<Text>().text = "- Recoge 3 combustibles = ";
             Debug.Log (Timer);
             KeyPickUp();
             fToInteract.SetActive(false);
+            Invoke("TextFoundKeyUnable", 5f);
         }
     }
+    
   }
 
     void OnTriggerExit (Collider other)
@@ -50,14 +60,17 @@ public class Keyandfuelcan : MonoBehaviour
 
     void MyVoicePlay(AudioClip Voice)
     {
-        playerAudioSource.clip = Voice;
-        playerAudioSource.Play();
+        if (!playerAudioSource.isPlaying)
+        {
+          playerAudioSource.clip = Voice;
+          playerAudioSource.Play();
+        }
     }
 
     void KeyPickUp()
     {
           MyVoicePlay(foundKeyVoice);
-          Destroy(this.gameObject);
+          Invoke ("DestroyInvoke", 5);
           textFoundKey.SetActive(true);
     }
 
@@ -68,5 +81,16 @@ public class Keyandfuelcan : MonoBehaviour
        {
          textFoundKey.SetActive(false);
        }
+    }
+
+    void TextFoundKeyUnable()
+    {
+        Destroy(textFoundKey);
+    }
+
+    void DestroyInvoke()
+    {
+      fToInteract.SetActive(false);
+      Destroy(this.gameObject);
     }
 }
