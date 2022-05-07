@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
   public int fuelToDisplay = 0;
   public Text intFuel;
   public Text backToCar;
-  
+  public int maxHealth = 100;
 
   void Awake()
   {   
@@ -50,6 +50,7 @@ public class Player : MonoBehaviour
   }
   public void TakeDamage(int amount)
   {
+    Debug.Log("Dano recibido");
       health -= amount;
   }
   void LoadSceneOnDeath()
@@ -86,5 +87,9 @@ public class Player : MonoBehaviour
           intFuel.enabled = false;
           EscapeArea.SetActive(true);
       }
+  }
+  public void Heal(int amount)
+  {
+    health = Mathf.Min(health + amount, maxHealth);
   }
 }

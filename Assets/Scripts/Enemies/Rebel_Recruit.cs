@@ -1,31 +1,38 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+/*TODO chequear que si el length de waypoints es menor a 0, el personaje quede en idle
+
+*/
 public class Rebel_Recruit : Enemy
 {
-    [SerializeField] private Transform[] waypoints;
     [SerializeField] private float patrolSpeed;
     [SerializeField] private float chaseSpeed;
-    public int waypointIndex = 0;
+    public WaypointPatrol waypointPatrolling;
+    public AudioSource audioSource;
+    public AudioClip gunShot;
     public float rotationSpeed = 1f;
-    public float minimumDistanceToWaypoint = 1f;
     public float minimumDistanceToPlayer = 10f;
     public float maxDistanceToPlayer = 40f;
     public Transform playerTransform;
     public Animator rebelAnimation;
+    public bool isShooting;
 
     public RebelActivity rebelActivity;
     NavMeshAgent agent;
     void Start()
     {
+      waypointPatrolling = GetComponent<WaypointPatrol>();
       agent = GetComponent<NavMeshAgent>();
       rebelAnimation.SetBool("isIdle", false);
       rebelActivity = RebelActivity.Patrol;
       damage = 5;
       health = 100;
-      lookRange = 20f;
+      lookRange = 30f;
       gunRange = 25f;
       spread = 0.1f;
+      isShooting = false;
+      audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     void Update()
@@ -44,7 +51,7 @@ public class Rebel_Recruit : Enemy
          else 
          {
            rebelAnimation.SetBool("isPatrolling", true);
-           Move();
+        //  waypointPatrolling.Patrol(patrolSpeed, agent, rotationSpeed);
          }
          break;
          case RebelActivity.Chase:
@@ -58,11 +65,23 @@ public class Rebel_Recruit : Enemy
            ChasePlayer();
          }
          break;
+         case RebelActivity.Attack:
+          rebelAnimation.SetBool("isChasing", false);
+          rebelAnimation.SetBool("isFiring", true);
+           if (Vector3.Distance(playerTransform.position, transform.position) >= minimumDistanceToPlayer) {
+            rebelActivity = RebelActivity.Chase;
+         }
+         if (!isShooting) {
+           isShooting = true;
+           Invoke("Attack", 1.2f);
+         }
+         break;
          case RebelActivity.Idle:
            rebelAnimation.SetBool("isPatrolling", false);
            rebelAnimation.SetBool("isIdle", true);
          break;
          case RebelActivity.Dead:
+         rebelAnimation.SetBool("isDead", true);
            OnDeath();
          break;
       }
@@ -70,34 +89,6 @@ public class Rebel_Recruit : Enemy
     public void TakeDamage(int amount)
     {
       health -= amount;
-    }
-
-    void Move()
-    {
-      // Vector representando la distancia entre el waypoint y el enemigo
-      Vector3 distanceToWaypoint = waypoints[waypointIndex].position - transform.position;
-      // Vector representando la direccion del enemigo en relacion al waypoint;
-      Vector3 waypointDirection = distanceToWaypoint.normalized;
-      // con esto el enemigo avanza hacia el waypoint
-      agent.SetDestination(waypointDirection * patrolSpeed * Time.deltaTime);
-      Debug.Log(agent.destination);
-      // con esto el enemigo se gira suavemente hacia el waypoint
-      transform.forward = Vector3.Lerp(transform.forward, waypointDirection, rotationSpeed * Time.deltaTime);
-
-      // Si el enemigo llega al waypoint..
-      if (Vector3.Distance(transform.position, waypoints[waypointIndex].position) <= minimumDistanceToWaypoint)
-      {
-        // Si el indice actual es mayor o igual al total de waypoints
-        if (waypointIndex >= waypoints.Length - 1)
-        {
-          // se reinicia el waypoint a seguir
-          waypointIndex = 0;
-        } else
-        {
-          // la direccion cambia al siguiente waypoint
-          waypointIndex++;
-        }
-      }
     }
      protected virtual bool PlayerFound()
   {
@@ -111,16 +102,30 @@ public class Rebel_Recruit : Enemy
   }
     void ChasePlayer()
     {
+      if (!PlayerFound()) {
+        rebelActivity = RebelActivity.Patrol;
+        return;
+      }
       if (Vector3.Distance(playerTransform.position, transform.position) >= minimumDistanceToPlayer)
       {
         Vector3 distanceToPlayer = playerTransform.position - transform.position;
-        agent.SetDestination(playerTransform.position * patrolSpeed * Time.deltaTime);
+        agent.SetDestination(playerTransform.position);
         transform.forward = Vector3.Lerp(transform.forward, -playerTransform.forward, rotationSpeed * Time.deltaTime);
-        Shoot();
+      } else {
+        rebelActivity = RebelActivity.Attack;
+        agent.SetDestination(transform.position);
       }
     }
     void OnDeath()
     {
+      
       Destroy(this.gameObject, 15f);
+    }
+    void Attack()
+    {
+      audioSource.clip = gunShot;
+      audioSource.Play();
+      Shoot();
+      isShooting = false;
     }
 }
