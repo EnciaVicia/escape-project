@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/War Project Escape.unity
+    guid: cf35adc8d8d84a54b811a09fd5839ec1
+  - enabled: 1
+    path: Assets/Scenes/Mainmenu.unity
+    guid: f63e89d6fc808a347b1a21d5105b5947
+  - enabled: 1
+    path: Assets/Scenes/Options.unity
+    guid: 36df5d8afc5b02249bc7e6ec80b7b49c
+  - enabled: 1
+    path: Assets/Scenes/WarProject2.unity
+    guid: c30a13c204c88114a875cd091f750fc9
   m_configObjects: {}

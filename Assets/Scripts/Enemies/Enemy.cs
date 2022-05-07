@@ -2,12 +2,12 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-  protected int health;
-  protected int damage;
-  protected float speed;
-  protected float gunRange;
-  protected float lookRange;
-  protected float spread;
+  [SerializeField]protected int health;
+  [SerializeField]protected int damage;
+  [SerializeField]protected float speed;
+  [SerializeField]protected float gunRange;
+  [SerializeField]protected float lookRange;
+  [SerializeField]protected float spread;
   
   public enum RebelActivity {
     Idle,
@@ -35,7 +35,10 @@ public abstract class Enemy : MonoBehaviour
     float spreadX = Random.Range(-spread, spread);
     float spreadY = Random.Range(-spread, spread);
     Vector3 spreadDirection = shootPoint.transform.forward + new Vector3(spreadX, spreadY, 0f);
-    if (Physics.Raycast(spreadDirection, shootPoint.transform.forward, out hit, gunRange)) {
+    Debug.DrawLine(shootPoint.transform.forward, spreadDirection, Color.red, 40);
+    Debug.Log("Dispara?");
+    if (Physics.Raycast(shootPoint.transform.forward, spreadDirection, out hit, gunRange)) {
+      Debug.Log(hit.transform.tag);
       if (hit.transform.tag == "Player") {
         DealDamage(damage, hit.transform);
       }

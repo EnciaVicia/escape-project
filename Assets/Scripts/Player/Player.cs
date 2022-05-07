@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
   public GameObject WoodenCarSign;
   public float distance = 3f;
   public int health = 100;
+  public int maxHealth = 100;
 
   void Awake()
   {
@@ -61,10 +62,15 @@ public class Player : MonoBehaviour
   }
   public void TakeDamage(int amount)
   {
+    Debug.Log("Dano recibido");
       health -= amount;
   }
   void LoadSceneOnDeath()
   {
     SceneManager.LoadScene("War Project Escape");
+  }
+  public void Heal(int amount)
+  {
+    health = Mathf.Min(health + amount, maxHealth);
   }
 }

@@ -12,4 +12,4 @@ Mover hacia la derecha = D
 Rotar cámara: Mouse
 
 Para desarrollar este proyecto se utilizó Unity 2020.3.26f1
-Incluye los Assets Cinemachine y Terrain T
+Incluye los Assets Cinemachine y Terrain Tools
