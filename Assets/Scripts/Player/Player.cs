@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Rendering.PostProcessing;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
   public GameObject cam2;
@@ -9,51 +13,35 @@ public class Player : MonoBehaviour
   private float gravity = 3f;
   public AudioSource playerAudio;
   public AudioClip keyFound;
+  public Light Flashlight;
+  public bool ActivLight = false;
+  public List<GameObject> Fuel = new List<GameObject>();
   private Vector3 moveDirection;
   public float movementSpeed;
-  public GameObject WoodenCarSign;
   public float distance = 3f;
   public int health = 100;
+  public GameObject EscapeArea;
+  public Text IntHealth;
+  public int fuelToDisplay = 0;
+  public Text intFuel;
+  public Text backToCar;
   public int maxHealth = 100;
 
   void Awake()
-  {
-    WoodenCarSign.SetActive(false);
+  {   
+      EscapeArea.SetActive(false);
   }
   void Update()
   {
     if (health <= 0) {
       Time.timeScale = 0f;
       Invoke("LoadSceneOnDeath", 7f);
+      FlashlightOffOn();
     }
-  }
-  void OnTriggerStay(Collider other)
-  {
-    if (other.gameObject.name == "GetKeyArea")
-    {
-      if (timeLeft <= 0)
-      {
-        hasKey = true;
-        timeLeft = 3f;
-        WoodenCarSign.SetActive(true);
-        StartAudioClip(keyFound);
-        other.gameObject.SetActive(false);
-      } else
-      {
-        timeLeft -= Time.deltaTime;
-      }
-    }
-    if (other.gameObject.name == "EscapeArea")
-    {
-      if (timeLeft <= 0)
-      {
-        Time.timeScale = 0f;
-        timeLeft = 3f;
-      } else
-      {
-        timeLeft -= Time.deltaTime;
-      }
-    }
+    IntHealth.text = "" + health;
+    intFuel.text = "" + fuelToDisplay;
+
+    FuelList();
   }
   void StartAudioClip(AudioClip clip)
   {
@@ -68,6 +56,37 @@ public class Player : MonoBehaviour
   void LoadSceneOnDeath()
   {
     SceneManager.LoadScene("War Project Escape");
+  }
+
+ void FlashlightOffOn()
+  {
+    if (Input.GetKeyDown(KeyCode.T))
+    {
+      if(ActivLight == false)
+    {
+        Flashlight.enabled = true;
+        ActivLight = !ActivLight;
+    }
+
+      if(ActivLight == true)
+    {
+        Flashlight.enabled = false;
+        ActivLight = !ActivLight;
+    }
+
+    }
+
+  }
+
+  void FuelList()
+  {
+      if (Fuel.Count >= 3)
+      {
+          backToCar.text = "- Regresa al auto y escapa";
+          backToCar.color = Color.green;
+          intFuel.enabled = false;
+          EscapeArea.SetActive(true);
+      }
   }
   public void Heal(int amount)
   {

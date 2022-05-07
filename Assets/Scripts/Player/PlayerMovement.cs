@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.Rendering.PostProcessing;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
@@ -11,9 +11,13 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHeight = 3f;
     Vector3 velocity;
     bool isGrounded;
+
+    public PostProcessVolume PostProcess;
+
+    private ChromaticAberration aberration;
     void Start()
     {
-        
+        PostProcess.profile.TryGetSettings(out aberration);
     }
 
     void Update()
@@ -36,8 +40,10 @@ public class PlayerMovement : MonoBehaviour
 
      if (Input.GetKeyDown(KeyCode.LeftShift)) {
        speed = 6f;
+       aberration.intensity.value = 0.3f;
      } else if (!Input.GetKey(KeyCode.LeftShift)) {
        speed = 4f;
+       aberration.intensity.value = 0f;
      }
 
       velocity.y += gravity * Time.deltaTime;
