@@ -28,9 +28,14 @@ public class Player : MonoBehaviour
   public int maxHealth = 100;
   public GameObject MenuPause;
   public GameObject HUD;
+  public bool isLoaded;
 
   void Awake()
   {   
+      if (SceneManager.GetActiveScene () == SceneManager.GetSceneByName ("WarProject2"))
+      {
+          backToCar.text = "- Encuentra el helicoptero para escapar";
+      }
       EscapeArea.SetActive(false);
   }
   void Update()
