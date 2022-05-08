@@ -46,6 +46,12 @@ public class Play : MonoBehaviour
         Application.Quit();
     }
 
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        StartAudioClip(soundButon);
+    }
+
     void LoadScenePlay()
     {
         SceneManager.LoadScene(0);
@@ -62,9 +68,8 @@ public class Play : MonoBehaviour
     }
     void StartAudioClip(AudioClip clip)
     {
-    audioSource.clip = soundButon;
-    audioSource.Play();
+        audioSource.clip = soundButon;
+        audioSource.Play();
     }
-
   
 }

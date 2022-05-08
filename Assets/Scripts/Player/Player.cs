@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
   public Text intFuel;
   public Text backToCar;
   public int maxHealth = 100;
+  public GameObject MenuPause;
+  public GameObject HUD;
 
   void Awake()
   {   
@@ -33,6 +35,10 @@ public class Player : MonoBehaviour
   }
   void Update()
   {
+    if (Input.GetKeyDown(KeyCode.Escape))
+    {
+      ActivePuseMenu();
+    }
     if (health <= 0) {
       Time.timeScale = 0f;
       Invoke("LoadSceneOnDeath", 7f);
@@ -91,5 +97,19 @@ public class Player : MonoBehaviour
   public void Heal(int amount)
   {
     health = Mathf.Min(health + amount, maxHealth);
+  }
+
+  void ActivePuseMenu()
+  {
+        if (MenuPause.activeSelf && !HUD.activeSelf)
+        {
+           Time.timeScale = 1f;
+        }
+        else
+        {
+           Time.timeScale = 0f;
+        }
+        MenuPause.SetActive(!MenuPause.activeSelf);
+        HUD.SetActive(!HUD.activeSelf);
   }
 }
