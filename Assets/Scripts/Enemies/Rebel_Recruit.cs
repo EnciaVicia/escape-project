@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-/*TODO chequear que si el length de waypoints es menor a 0, el personaje quede en idle
-
-*/
 public class Rebel_Recruit : Enemy
 {
     [SerializeField] private float patrolSpeed;
@@ -16,6 +13,7 @@ public class Rebel_Recruit : Enemy
     public float maxDistanceToPlayer = 40f;
     public Transform playerTransform;
     public Animator rebelAnimation;
+    public int fireRange;
     public bool isShooting;
 
     public RebelActivity rebelActivity;
@@ -42,25 +40,15 @@ public class Rebel_Recruit : Enemy
       }
       switch(rebelActivity)
       {
-        case RebelActivity.Patrol:
-         if (PlayerFound())
-         {
-           rebelAnimation.SetBool("isPatrolling", false);
-           rebelActivity = RebelActivity.Chase;
-         } 
-         else 
-         {
-           rebelAnimation.SetBool("isPatrolling", true);
-        //  waypointPatrolling.Patrol(patrolSpeed, agent, rotationSpeed);
-         }
-         break;
          case RebelActivity.Chase:
-         if (Vector3.Distance(playerTransform.position, transform.position) >= maxDistanceToPlayer)
+         if (!PlayerFound())
          {
            rebelAnimation.SetBool("isChasing", false);
+           rebelAnimation.SetBool("isIdle", true);
            rebelActivity = RebelActivity.Patrol;
          } else
          {
+           rebelAnimation.SetBool("isIdle", false);
            rebelAnimation.SetBool("isChasing", true);
            ChasePlayer();
          }
@@ -68,7 +56,7 @@ public class Rebel_Recruit : Enemy
          case RebelActivity.Attack:
           rebelAnimation.SetBool("isChasing", false);
           rebelAnimation.SetBool("isFiring", true);
-           if (Vector3.Distance(playerTransform.position, transform.position) >= minimumDistanceToPlayer) {
+           if (PlayerFound()) {
             rebelActivity = RebelActivity.Chase;
          }
          if (!isShooting) {
@@ -77,10 +65,21 @@ public class Rebel_Recruit : Enemy
          }
          break;
          case RebelActivity.Idle:
-           rebelAnimation.SetBool("isPatrolling", false);
-           rebelAnimation.SetBool("isIdle", true);
+           if (PlayerFound())
+           {
+              rebelAnimation.SetBool("isIdle", false);
+              rebelAnimation.SetBool("isChasing", true);
+              rebelActivity = RebelActivity.Chase;
+           } 
+           else 
+           {
+             rebelAnimation.SetBool("isIdle", true);
+             rebelAnimation.SetBool("isChasing", false);
+           }
          break;
          case RebelActivity.Dead:
+         rebelAnimation.SetBool("isFiring", false);
+         rebelAnimation.SetBool("isChasing", false);
          rebelAnimation.SetBool("isDead", true);
            OnDeath();
          break;
@@ -106,9 +105,8 @@ public class Rebel_Recruit : Enemy
         rebelActivity = RebelActivity.Patrol;
         return;
       }
-      if (Vector3.Distance(playerTransform.position, transform.position) >= minimumDistanceToPlayer)
+      if (!isPlayerInRange())
       {
-        Vector3 distanceToPlayer = playerTransform.position - transform.position;
         agent.SetDestination(playerTransform.position);
         transform.forward = Vector3.Lerp(transform.forward, -playerTransform.forward, rotationSpeed * Time.deltaTime);
       } else {
@@ -120,6 +118,17 @@ public class Rebel_Recruit : Enemy
     {
       
       Destroy(this.gameObject, 15f);
+    }
+    bool isPlayerInRange()
+    {
+      Collider[] playerInFireRange = Physics.OverlapSphere(transform.position, fireRange);
+      foreach (Collider c in playerInFireRange)
+      {
+        if (c.transform.tag == "Player") {
+          return true;
+        }
+      }
+        return false;
     }
     void Attack()
     {

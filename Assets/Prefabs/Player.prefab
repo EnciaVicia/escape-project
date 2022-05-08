@@ -452,6 +452,7 @@ MonoBehaviour:
     m_Bits: 512
   gravity: -12
   jumpHeight: 1.5
+  PostProcess: {fileID: 0}
 --- !u!114 &6251757183069518467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -468,10 +469,20 @@ MonoBehaviour:
   hasKey: 0
   playerAudio: {fileID: 0}
   keyFound: {fileID: 8300000, guid: 1239fca9772fa024fac84ab406f19864, type: 3}
+  Flashlight: {fileID: 0}
+  ActivLight: 0
+  Fuel: []
   movementSpeed: 0
-  WoodenCarSign: {fileID: 0}
   distance: 3
   health: 100
+  EscapeArea: {fileID: 0}
+  IntHealth: {fileID: 0}
+  fuelToDisplay: 0
+  intFuel: {fileID: 0}
+  backToCar: {fileID: 0}
+  maxHealth: 100
+  MenuPause: {fileID: 0}
+  HUD: {fileID: 0}
 --- !u!114 &6251757183069518470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,13 +497,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   timeBetweenShooting: 0.03
-  spread: 0.01
+  spread: 0.006
   range: 20
   reloadTime: 2
   timeBetweenShots: 0.1
-  magazineSize: 14
   bulletsPerTap: 1
-  availableMagazines: 2
+  weaponSFX: []
+  shotSource: {fileID: 0}
   currentMagazine: 0
   ammo: 0e0000000e0000000e000000
   allowHoldButton: 0
@@ -598,9 +609,9 @@ MonoBehaviour:
   range: 0
   reloadTime: 0
   timeBetweenShots: 0
-  magazineSize: 0
   bulletsPerTap: 0
-  availableMagazines: 0
+  weaponSFX: []
+  shotSource: {fileID: 0}
   currentMagazine: 0
   ammo: 000000000000000000000000
   allowHoldButton: 0

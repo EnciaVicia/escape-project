@@ -2616,7 +2616,7 @@ MonoBehaviour:
   damage: 5
   speed: 0
   gunRange: 40
-  lookRange: 30
+  lookRange: 20
   spread: 0.1
   shootPoint: {fileID: 2791558134993669344}
   patrolSpeed: 3
@@ -2625,10 +2625,11 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   gunShot: {fileID: 8300000, guid: f285367ea4f34814f8ed97ff7d764bfc, type: 3}
   rotationSpeed: 1
-  minimumDistanceToPlayer: 10
-  maxDistanceToPlayer: 40
-  playerTransform: {fileID: 0}
+  minimumDistanceToPlayer: 20
+  maxDistanceToPlayer: 60
+  playerTransform: {fileID: 6251757183069518493, guid: 8e0ea722c69046546a59e4898e2d7423, type: 3}
   rebelAnimation: {fileID: 8443730677748993927}
+  fireRange: 15
   isShooting: 0
   rebelActivity: 0
 --- !u!1 &8927874069692195145
