@@ -31,7 +31,6 @@ public class PickUpFuel: MonoBehaviour
                 FuelFound (itemFound);
                 FtointeractFuel.SetActive(false);
                 Destroy(this.gameObject);
-                Debug.Log(other.GetComponent<Player>().Fuel);
                 other.GetComponent<Player>().Fuel.Add(gameObject);
                 other.GetComponent<Player>().fuelToDisplay ++;    
             }

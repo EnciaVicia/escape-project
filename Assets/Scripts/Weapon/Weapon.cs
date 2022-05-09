@@ -21,6 +21,7 @@ public class Weapon : MonoBehaviour
   
   private void Start() {
     ammoLeft = ammo[currentMagazine];
+    ammoToDisplay = ammoLeft;
     isReadyToShoot = true;
     shotSource = gameObject.AddComponent<AudioSource>();
   }
@@ -46,7 +47,7 @@ public class Weapon : MonoBehaviour
     float spreadY = Random.Range(-spread, spread);
 
     Vector3 spreadDirection = fpsCam.transform.forward + new Vector3(spreadX, spreadY, 0f);
-    Debug.DrawLine(spreadDirection, fpsCam.transform.position, Color.blue, 30);
+    Debug.DrawRay(fpsCam.transform.position, spreadDirection, Color.blue, 30);
     if (Physics.Raycast(fpsCam.transform.position, spreadDirection, out rayHit, range)) {
       if (rayHit.collider.CompareTag("Enemy")) {
         rayHit.collider.GetComponent<Rebel_Recruit>().TakeDamage(damage);
@@ -55,7 +56,6 @@ public class Weapon : MonoBehaviour
     ammoLeft--;
     ammoShot--;
     ammoToDisplay = ammoLeft;
-    Debug.Log(ammoToDisplay);
     PlaySound(weaponSFX, 0);
     Invoke("ResetShot", timeBetweenShooting);
     // IF para disparar en rafagas
@@ -85,6 +85,7 @@ public class Weapon : MonoBehaviour
       currentMagazine = 0;
     }
     ammoLeft = ammo[currentMagazine];
+    ammoToDisplay = ammoLeft;
     isReloading = false;
   }
   void PlaySound(List<AudioClip> sound, int index) {
@@ -94,5 +95,14 @@ public class Weapon : MonoBehaviour
   public void RechargeAmmo(int amount)
   {
       ammo.Add(amount);
+  }
+  public string AmmoToDisplay()
+  {
+    var acc = 0;
+    for (int i = 1; i < ammo.Count; i++)
+    {
+      acc += ammo[i];
+    }
+    return "" + ammoToDisplay + " / " + acc;
   }
 }

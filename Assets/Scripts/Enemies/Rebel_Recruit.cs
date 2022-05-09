@@ -15,6 +15,8 @@ public class Rebel_Recruit : Enemy
     public Animator rebelAnimation;
     public int fireRange;
     public bool isShooting;
+    public AudioClip yell;
+    bool hasYelled;
 
     public RebelActivity rebelActivity;
     NavMeshAgent agent;
@@ -23,14 +25,15 @@ public class Rebel_Recruit : Enemy
       waypointPatrolling = GetComponent<WaypointPatrol>();
       agent = GetComponent<NavMeshAgent>();
       rebelAnimation.SetBool("isIdle", false);
-      rebelActivity = RebelActivity.Patrol;
+      rebelActivity = RebelActivity.Idle;
       damage = 5;
       health = 100;
       lookRange = 30f;
-      gunRange = 25f;
-      spread = 0.1f;
+      gunRange = 30;
+      spread = 0.001f;
       isShooting = false;
       audioSource = gameObject.AddComponent<AudioSource>();
+      hasYelled = false;
     }
 
     void Update()
@@ -56,7 +59,7 @@ public class Rebel_Recruit : Enemy
          case RebelActivity.Attack:
           rebelAnimation.SetBool("isChasing", false);
           rebelAnimation.SetBool("isFiring", true);
-           if (PlayerFound()) {
+           if (isPlayerInRange()) {
             rebelActivity = RebelActivity.Chase;
          }
          if (!isShooting) {
@@ -94,6 +97,11 @@ public class Rebel_Recruit : Enemy
     Collider[] hitColliders = Physics.OverlapSphere(transform.position, lookRange);
     foreach (var hitCollider in hitColliders) {
       if (hitCollider.transform.tag == "Player") {
+        if (!hasYelled) {
+          audioSource.clip = yell;
+          audioSource.Play();
+          hasYelled = true;
+        }
         return true;
       }
     }
@@ -108,8 +116,11 @@ public class Rebel_Recruit : Enemy
       if (!isPlayerInRange())
       {
         agent.SetDestination(playerTransform.position);
-        transform.forward = Vector3.Lerp(transform.forward, -playerTransform.forward, rotationSpeed * Time.deltaTime);
+        Quaternion rotation = Quaternion.LookRotation(playerTransform.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
       } else {
+        Quaternion rotation = Quaternion.LookRotation(playerTransform.position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
         rebelActivity = RebelActivity.Attack;
         agent.SetDestination(transform.position);
       }

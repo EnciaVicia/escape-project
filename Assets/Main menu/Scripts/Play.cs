@@ -54,7 +54,7 @@ public class Play : MonoBehaviour
 
     void LoadScenePlay()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     void LoadSceneOptions()
@@ -64,7 +64,7 @@ public class Play : MonoBehaviour
 
     void LoadSceneBack()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
     void StartAudioClip(AudioClip clip)
     {
